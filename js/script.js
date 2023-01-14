@@ -24,8 +24,8 @@ const gameBoard = {
   frames: 0,
   start: function () {
     this.isKeyPressed = false
-    this.canvas.width = 1000
-    this.canvas.height = 500
+    this.canvas.width = 700
+    this.canvas.height = 350
     this.context = this.canvas.getContext('2d')
     document.body.appendChild(this.canvas)
     this.interval = setInterval(updateGameArea, 20)
@@ -48,7 +48,7 @@ class Component {
     this.speedX = 0
     this.speedY = 0
     this.img = img
-    this.gravity = 0.2
+    this.gravity = 0.1
   }
   update() {
     const ctx = gameBoard.context
@@ -93,19 +93,19 @@ document.addEventListener('keydown', ({ key }) => {
   switch (key) {
     case 'Up':
     case 'ArrowUp':
-      player.speedY -= 3
+      player.speedY -= 2
       break
     case 'Down':
     case 'ArrowDown':
-      player.speedY += 1
+      player.speedY += 2
       break
     case 'Left':
     case 'ArrowLeft':
-      player.speedX -= 1
+      player.speedX -= 2
       break
     case 'Right':
     case 'ArrowRight':
-      player.speedX += 1
+      player.speedX += 2
       break
     case ' ':
       player.isGravityReversed = true
@@ -123,7 +123,7 @@ document.addEventListener('keyup', (e) => {
   }
 })
 
-const player = new Component(faby, 35, 35, 0, 110)
+const player = new Component(faby, 30, 30, 0, 110)
 
 const bg = new Image()
 bg.src = '../images/bg.png'
@@ -149,10 +149,10 @@ const updatePipes = () => {
     let minGap = 75
     let maxGap = 150
     let gap = Math.floor(Math.random() * (maxGap - minGap + 1) + minGap)
-    pipeOnTop = new Component(topPipe, 50, height, x, 0)
+    pipeOnTop = new Component(topPipe, 30, height, x, 0)
     pipesArray.push(pipeOnTop)
     pipesArray.push(
-      new Component(bottomPipe, 50, x - height - gap, x, height + gap)
+      new Component(bottomPipe, 30, x - height - gap, x, height + gap)
     )
   }
 
