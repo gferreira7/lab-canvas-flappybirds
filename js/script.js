@@ -1,5 +1,3 @@
-const pipesArray = []
-
 const faby = new Image()
 faby.src = '../images/flappy.png'
 
@@ -9,6 +7,10 @@ topPipe.src = '../images/obstacle_top.png'
 const bottomPipe = new Image()
 bottomPipe.src = '../images/obstacle_bottom.png'
 
+const pipesArray = []
+let currentScore = 0
+let pipesSurvived = 0
+
 window.onload = function () {
   document.getElementById('start-button').onclick = function () {
     startGame()
@@ -16,6 +18,7 @@ window.onload = function () {
 
   function startGame() {
     gameBoard.start()
+    return
   }
 }
 
@@ -48,7 +51,7 @@ class Component {
     this.speedX = 0
     this.speedY = 0
     this.img = img
-    this.gravity = 0.1
+    this.gravity = 0.3
   }
   update() {
     const ctx = gameBoard.context
@@ -93,7 +96,7 @@ document.addEventListener('keydown', ({ key }) => {
   switch (key) {
     case 'Up':
     case 'ArrowUp':
-      player.speedY -= 2
+      player.speedY -= 10
       break
     case 'Down':
     case 'ArrowDown':
@@ -159,20 +162,33 @@ const updatePipes = () => {
   for (i = 0; i < pipesArray.length; i++) {
     pipesArray[i].x += -2
     pipesArray[i].update()
+    if (pipesArray[i].x + 20 < 0) {
+      pipesArray.shift()
+      pipesSurvived++
+      currentScore += pipesSurvived
+    }
   }
 }
 
+const updateScore = () => {
+  const newScore = document.getElementById('new-score')
+  newScore.innerHTML = `SCORE: ${currentScore}`
+}
 const checkGameOver = () => {
   const crashed = pipesArray.some(function (pipe) {
     return player.crashWith(pipe)
   })
   let outOfBounds = false
-  if(player.y < 0 || player.y > gameBoard.canvas.height){
+  if (player.y < 0 || player.y > gameBoard.canvas.height) {
     outOfBounds = true
   }
-  console.log(player.y, gameBoard.canvas.height)
+
   if (crashed || outOfBounds) {
+    //reset
+    currentScore = 0
+    pipesSurvived = 0
     gameBoard.stop()
+    return
   }
 }
 
@@ -201,5 +217,6 @@ function updateGameArea() {
   player.move()
   player.update()
   updatePipes()
+  updateScore()
   checkGameOver()
 }
